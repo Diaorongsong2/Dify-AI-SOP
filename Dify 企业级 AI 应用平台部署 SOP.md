@@ -61,7 +61,7 @@
 cat /etc/rocky-release
 ```
 
-(images/image-20260721180709369.png)
+![系统版本验证截图](images/image-20260721180709369.png)
 
 ### 2.2 基础依赖包安装
 
