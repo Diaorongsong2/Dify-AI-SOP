@@ -69,7 +69,7 @@ cat /etc/rocky-release
 dnf install -y wget vim net-tools gcc gcc-c++ make git curl jq
 ```
 
-![image-20260721180739882](C:\Users\刁荣松\AppData\Roaming\Typora\typora-user-images\image-20260721180739882.png)
+!(images\image-20260721180739882.png)
 
 ### 2.3 Docker 与 Docker Compose v2 安装
 
