@@ -61,7 +61,7 @@
 cat /etc/rocky-release
 ```
 
-![image-20260721180709369](C:\Users\刁荣松\AppData\Roaming\Typora\typora-user-images\image-20260721180709369.png)
+images\image-20260721180709369.png
 
 ### 2.2 基础依赖包安装
 
