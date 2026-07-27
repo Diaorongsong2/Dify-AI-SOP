@@ -69,7 +69,7 @@ cat /etc/rocky-release
 dnf install -y wget vim net-tools gcc gcc-c++ make git curl jq
 ```
 
-!(images/image-20260721180739882.png)
+![基础依赖包安装截图](images/image-20260721180739882.png)
 
 ### 2.3 Docker 与 Docker Compose v2 安装
 
@@ -127,7 +127,7 @@ systemctl start docker
 systemctl enable docker
 ```
 
-![image-20260721181230213](C:\Users\刁荣松\AppData\Roaming\Typora\typora-user-images\image-20260721181230213.png)
+![Docker镜像加速配置截图](images/image-20260721181230213.png)
 
 #### 2.3.4 安装验证
 
@@ -138,7 +138,7 @@ docker compose version
 
 两条命令均正常输出版本信息即为安装成功。
 
-![image-20260721181246726](C:\Users\刁荣松\AppData\Roaming\Typora\typora-user-images\image-20260721181246726.png)
+![Docker安装验证截图](images/image-20260721181246726.png)
 
 ### 2.4 系统基础配置
 
@@ -173,7 +173,7 @@ mkdir -p /data/dify-persist/{postgres,redis,models,uploads}
 chmod -R 777 /data/dify-persist
 ```
 
-![image-20260721181511731](C:\Users\刁荣松\AppData\Roaming\Typora\typora-user-images\image-20260721181511731.png)
+![目录规划截图](images/image-20260721181511731.png)
 
 ### 3.2 获取 Dify 部署源码
 
@@ -248,7 +248,7 @@ docker compose up -d
 
 部署组件包含：后端 API、前端页面、Worker 异步服务、Websocket 服务、向量数据库 Weaviate、PostgreSQL、Redis、Nginx 反向代理、代码沙箱、插件服务。
 
-![image-20260721181611303](C:\Users\刁荣松\AppData\Roaming\Typora\typora-user-images\image-20260721181611303.png)
+![启动全套服务截图](images/image-20260721181611303.png)
 
 ### 3.5 服务状态验证
 
@@ -261,7 +261,7 @@ docker compose ps
 - `api` 服务需等待数据库迁移完成后变为 `healthy`，首次启动约 1-3 分钟
 - 若 `nginx` 出现 `Restarting`、`api` 显示 `unhealthy`，参考第 6 章故障排查
 
-![image-20260721181641352](C:\Users\刁荣松\AppData\Roaming\Typora\typora-user-images\image-20260721181641352.png)
+![服务状态验证截图](images/image-20260721181641352.png)
 
 **补充验证命令**：
 
@@ -282,7 +282,7 @@ curl -I http://127.0.0.1/console/api/version
 
 **访问入口**：浏览器访问 `http://服务器IP`，首次访问自动跳转至初始化页面，按指引设置管理员账号与大模型配置。
 
-![image-20260721181816575](C:\Users\刁荣松\AppData\Roaming\Typora\typora-user-images\image-20260721181816575.png)
+![Nginx域名配置截图](images/image-20260721181816575.png)
 
 ------
 
@@ -303,7 +303,7 @@ kubectl get pods -n kube-system
 
 所有节点状态为 `Ready`、核心组件正常运行即可继续。
 
-![image-20260721181854850](C:\Users\刁荣松\AppData\Roaming\Typora\typora-user-images\image-20260721181854850.png)
+![K8s集群状态验证截图](images/image-20260721181854850.png)
 
 #### 4.1.2 Harbor 私有仓库准备
 
@@ -375,7 +375,7 @@ docker push ${HARBOR_ADDR}/dify-web:${DIFY_VERSION}
 # 依次推送所有打标后的镜像
 ```
 
-![image-20260722185342331](C:\Users\刁荣松\AppData\Roaming\Typora\typora-user-images\image-20260722185342331.png)
+![镜像推送Harbor截图](images/image-20260722185342331.png)
 
 #### 4.2.3 K8s 集群创建镜像拉取密钥
 
@@ -506,7 +506,7 @@ kubectl get pvc -n dify
 
 所有 PVC 状态为 `Bound` 即为配置成功。
 
-![image-20260722193253713](C:\Users\刁荣松\AppData\Roaming\Typora\typora-user-images\image-20260722193253713.png)
+![PVC状态验证截图](images/image-20260722193253713.png)
 
 ------
 
@@ -689,7 +689,7 @@ kubectl apply -f external-weaviate.yaml
 kubectl get pods -n dify -w
 ```
 
-![image-20260722193932936](C:\Users\刁荣松\AppData\Roaming\Typora\typora-user-images\image-20260722193932936.png)
+![中间件部署截图](images/image-20260722193932936.png)
 
 ### 4.5 Helm4.5 离线部署 Dify 主业务（关闭内置中间件，对接外置服务）
 
@@ -808,7 +808,7 @@ helm list -n dify
 kubectl get pods -n dify -w
 ```
 
-![image-20260722203446602](C:\Users\刁荣松\AppData\Roaming\Typora\typora-user-images\image-20260722203446602.png)
+![Helm部署截图](images/image-20260722203446602.png)
 
 ### 4.6 Ingress 域名访问配置 dify-ingress.yaml
 
@@ -879,9 +879,9 @@ kubectl get svc -n dify
 5. **对话应用验证**：创建对话应用，绑定大模型与知识库，验证问答响应与知识库引用正常
 6. **API 接口验证**：调用应用 API 密钥，验证外部系统对接能力
 
-![image-20260722204039433](C:\Users\刁荣松\AppData\Roaming\Typora\typora-user-images\image-20260722204039433.png)
+![功能验收截图](images/image-20260722204039433.png)
 
-![image-20260722213658953](C:\Users\刁荣松\AppData\Roaming\Typora\typora-user-images\image-20260722213658953.png)
+![功能验收补充截图](images/image-20260722213658953.png)
 
 ### 5.3 持久化有效性验证
 
