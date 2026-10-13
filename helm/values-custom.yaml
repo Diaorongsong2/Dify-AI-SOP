@@ -1,0 +1,88 @@
+# ========== 全局镜像仓库与拉取密钥 ==========
+global:
+  imageRegistry: "harbor:443/dify"
+  imagePullSecrets:
+    - name: harbor-auth
+
+# ========== 前端Web组件 ==========
+web:
+  image:
+    repository: dify-web
+    tag: 1.16.0
+  env:
+    SITE_URL: "http://dify.local"
+    CONSOLE_WEB_URL: "http://dify.local"
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+    requests:
+      cpu: 200m
+      memory: 256Mi
+
+# ========== API后端（对接外置Postgres/Redis/Weaviate） ==========
+api:
+  image:
+    repository: dify-api
+    tag: 1.16.0
+  resources:
+    limits:
+      cpu: 2000m
+      memory: 2Gi
+    requests:
+      cpu: 500m
+      memory: 512Mi
+  env:
+    SECRET_KEY: "Dify@Local2026SecretKey32BitXX"
+    SITE_API_URL: "http://dify.local/api"
+    CONSOLE_API_URL: "http://dify.local/api"
+    # 外置Postgres集群内服务地址
+    DB_HOST: external-postgres-svc.dify.svc.cluster.local
+    DB_PORT: 5432
+    DB_USER: dify
+    DB_PASSWORD: ""                 # 由 K8s Secret 注入，不写入代码库
+    DB_NAME: dify
+    # 外置Redis
+    REDIS_HOST: external-redis-svc.dify.svc.cluster.local
+    REDIS_PORT: 6379
+    REDIS_PASSWORD: ""              # 由 K8s Secret 注入，不写入代码库
+    # 外置Weaviate向量库
+    WEAVIATE_URL: http://external-weaviate-svc.dify.svc.cluster.local:8080
+    WEAVIATE_API_KEY: ""            # 由 K8s Secret 注入，不写入代码库
+  livenessProbe:
+    initialDelaySeconds: 60
+    periodSeconds: 30
+    timeoutSeconds: 10
+    failureThreshold: 3
+  readinessProbe:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+  # 用户上传文件持久化，绑定已有PVC
+  persistence:
+    enabled: true
+    storageClass: "manual"
+    size: 50Gi
+    existingClaim: dify-uploads-pvc
+
+# ========== 异步任务Worker ==========
+worker:
+  image:
+    repository: dify-api
+    tag: 1.16.0
+  resources:
+    limits:
+      cpu: 2000m
+      memory: 2Gi
+    requests:
+      cpu: 500m
+      memory: 512Mi
+
+# ========== 关闭Chart内置全部中间件（已独立部署） ==========
+postgresql:
+  enabled: false
+redis:
+  enabled: false
+weaviate:
+  enabled: false

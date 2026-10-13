@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: external-weaviate
+  namespace: dify
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: external-weaviate
+  serviceName: external-weaviate-svc
+  template:
+    metadata:
+      labels:
+        app: external-weaviate
+    spec:
+      imagePullSecrets:
+      - name: harbor-auth
+      containers:
+      - name: weaviate
+        image: harbor:443/dify/weaviate:1.27.0
+        env:
+        - name: AUTHENTICATION_APIKEY_ENABLED
+          value: "true"
+        - name: AUTHENTICATION_APIKEY_ALLOWED_KEYS
+          valueFrom:
+            secretKeyRef:
+              name: dify-secrets
+              key: weaviate-api-key
+        - name: AUTHENTICATION_APIKEY_USERS
+          value: hello@dify.ai
+        ports:
+        - containerPort: 8080
+        - containerPort: 50051
+        volumeMounts:
+        - name: weaviate-data
+          mountPath: /var/lib/weaviate
+      volumes:
+      - name: weaviate-data
+        persistentVolumeClaim:
+          claimName: dify-weaviate-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: external-weaviate-svc
+  namespace: dify
+spec:
+  selector:
+    app: external-weaviate
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+  - name: grpc
+    port: 50051
+    targetPort: 50051
+  clusterIP: None

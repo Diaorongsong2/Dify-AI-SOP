@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: external-redis
+  namespace: dify
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: external-redis
+  serviceName: external-redis-svc
+  template:
+    metadata:
+      labels:
+        app: external-redis
+    spec:
+      imagePullSecrets:
+      - name: harbor-auth
+      containers:
+      - name: redis
+        image: harbor:443/dify/redis:6-alpine
+        command: ["redis-server"]
+        args: ["--requirepass", "$(REDIS_PASSWORD)"]
+        env:
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: dify-secrets
+              key: redis-password
+        ports:
+        - containerPort: 6379
+        volumeMounts:
+        - name: redis-data
+          mountPath: /data
+      volumes:
+      - name: redis-data
+        persistentVolumeClaim:
+          claimName: dify-redis-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: external-redis-svc
+  namespace: dify
+spec:
+  selector:
+    app: external-redis
+  ports:
+  - port: 6379
+    targetPort: 6379
+  clusterIP: None
