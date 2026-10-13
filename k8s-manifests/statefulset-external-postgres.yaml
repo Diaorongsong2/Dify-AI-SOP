@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: external-postgres
+  namespace: dify
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: external-postgres
+  serviceName: external-postgres-svc
+  template:
+    metadata:
+      labels:
+        app: external-postgres
+    spec:
+      imagePullSecrets:
+      - name: harbor-auth
+      containers:
+      - name: postgres
+        image: harbor:443/dify/postgres:15-alpine
+        env:
+        - name: POSTGRES_USER
+          value: dify
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: dify-secrets
+              key: postgres-password
+        - name: POSTGRES_DB
+          value: dify
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - name: pg-data
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: pg-data
+        persistentVolumeClaim:
+          claimName: dify-postgres-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: external-postgres-svc
+  namespace: dify
+spec:
+  selector:
+    app: external-postgres
+  ports:
+  - port: 5432
+    targetPort: 5432
+  clusterIP: None

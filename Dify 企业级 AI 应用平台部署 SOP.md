@@ -542,7 +542,7 @@ spec:
         - name: POSTGRES_USER
           value: dify
         - name: POSTGRES_PASSWORD
-          value: Dify@2026PG#987
+          value: <SET_VIA_K8S_SECRET>
         - name: POSTGRES_DB
           value: dify
         ports:
@@ -594,7 +594,7 @@ spec:
       - name: redis
         image: harbor:443/dify/redis:6-alpine
         command: ["redis-server"]
-        args: ["--requirepass", "Redis@Dify123!"]
+        args: ["--requirepass", "<SET_VIA_K8S_SECRET>"]
         ports:
         - containerPort: 6379
         volumeMounts:
@@ -647,7 +647,7 @@ spec:
         - name: AUTHENTICATION_APIKEY_ENABLED
           value: "true"
         - name: AUTHENTICATION_APIKEY_ALLOWED_KEYS
-          value: "WVF5YThaHlkYwhGUSmCRgsX3tD5ngdN8pkih"
+          value: "<SET_VIA_K8S_SECRET>"
         - name: AUTHENTICATION_APIKEY_USERS
           value: hello@dify.ai
         ports:
@@ -749,15 +749,15 @@ api:
     DB_HOST: external-postgres-svc.dify.svc.cluster.local
     DB_PORT: 5432
     DB_USER: dify
-    DB_PASSWORD: Dify@2026PG#987
+    DB_PASSWORD: <SET_VIA_K8S_SECRET>
     DB_NAME: dify
     # 外置Redis
     REDIS_HOST: external-redis-svc.dify.svc.cluster.local
     REDIS_PORT: 6379
-    REDIS_PASSWORD: Redis@Dify123!
+    REDIS_PASSWORD: <SET_VIA_K8S_SECRET>
     # 外置Weaviate向量库
     WEAVIATE_URL: http://external-weaviate-svc.dify.svc.cluster.local:8080
-    WEAVIATE_API_KEY: WVF5YThaHlkYwhGUSmCRgsX3tD5ngdN8pkih
+    WEAVIATE_API_KEY: <SET_VIA_K8S_SECRET>
   livenessProbe:
     initialDelaySeconds: 60
     periodSeconds: 30
