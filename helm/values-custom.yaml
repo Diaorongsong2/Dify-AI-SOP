@@ -33,7 +33,7 @@ api:
       cpu: 500m
       memory: 512Mi
   env:
-    SECRET_KEY: "Dify@Local2026SecretKey32BitXX"
+    SECRET_KEY: ""                    # 由 K8s Secret 注入，本地生成后不要提交
     SITE_API_URL: "http://dify.local/api"
     CONSOLE_API_URL: "http://dify.local/api"
     # 外置Postgres集群内服务地址
