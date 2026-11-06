@@ -4,7 +4,9 @@
 
 内容包含 Helm 部署、中间件外置、镜像统一管理与对外访问配置，以及过程截图。
 
-**部署环境**：Rocky Linux 9 x86_64 / Kubernetes 集群 / Helm 3
+**部署环境**：Rocky Linux 9.4 x86_64 / Kubernetes v1.32.13 三节点集群 / Helm 3
+
+这套集群是单独搭的 3 台，跟 RuoYi 那个仓库里的 K8s v1.26.3 集群不是一批机器。
 
 ---
 
